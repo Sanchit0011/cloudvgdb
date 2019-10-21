@@ -1,0 +1,667 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Video Game Distribution Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="/css/main_page.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.5/angular-nvd3.min.js"></script>
+    <script src="/js/app.js"></script>
+</head>
+
+<body ng-app="vgdbApp">
+    <div>
+        <div ng-controller='homeCtrl'>
+            <script src="/js/home_controller.js"></script>
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="" ng-click="$root.page='Home'">VGDB</a>
+                    </div>
+
+                    <ul class="nav navbar-nav">
+                        <li><a href="" ng-click="$root.page='Home'">Home</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Genres
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="" ng-click="$root.page='Simulator'">Simulator</a></li>
+                                <li><a href="" ng-click="$root.page='Fighting'">Fighting</a></li>
+                                <li><a href="" ng-click="$root.page='Strategy'">Strategy</a></li>
+                                <li><a href="" ng-click="$root.page='Adventure'">Adventure</a></li>
+                                <li><a href="" ng-click="$root.page='Shooter'">Shooter</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="" ng-click="$root.page='Visualization'">Visualization</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+
+                        <li><a data-toggle="modal" data-target="#modalRegisterForm"
+                                ng-if="$root.isLoggedIn() == false">Registration</a></li>
+                        <li><a data-toggle="modal" data-target="#modalLoginForm" ng-if="$root.isLoggedIn() == false">Log
+                                In</a></li>
+                        <li><a ng-click="logout()" ng-if="$root.isLoggedIn() == true">Log Out</a></li>
+                    </ul>
+                </div>
+
+
+            </nav>
+        </div>
+
+        <div ng-controller="loginCtrl">
+            <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <form ng-submit="confirmLogin()">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title w-100 font-weight-bold">Log in</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body mx-3">
+                                <div class="md-form mb-5">
+
+                                    <!-- <i class="fas fa-user prefix grey-text"></i> -->
+                                    <label>Username</label>
+                                    <input type="text"  class="form-control validate"
+                                        ng-model="user.username" placeholder="Enter your username" required>
+
+                                </div>
+                                <div class="md-form mb-5">
+                                    <!-- <i class="fas fa-envelope prefix grey-text"></i> -->
+
+                                    <label>Password</label>
+                                    <input type="password"  class="form-control validate"
+                                        ng-model="user.password" placeholder="Enter your password" required>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <p style="float:left; font-size: 15px" ng-style='color'>{{loginMessage}}</p>
+                                <button type="submit" class="btn btn-primary">Log in</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <script src="/js/login_controller.js"></script>
+        </div>
+
+        <div ng-controller="registerCtrl">
+            <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <form ng-submit="createUser()">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title w-100 font-weight-bold">Sign up</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body mx-3">
+                                <div class="md-form mb-5">
+                                    <!-- <i class="fas fa-user prefix grey-text"></i> -->
+                                    <label>Username</label>
+                                    <input type="text" class="form-control validate"
+                                        ng-model="user.username" placeholder="Enter your username" required>
+
+                                </div>
+                                <div class="md-form mb-5">
+                                    <!-- <i class="fas fa-envelope prefix grey-text"></i> -->
+
+                                    <label>Password</label>
+                                    <input type="password" class="form-control validate"
+                                        ng-model="user.password"
+                                        placeholder="Enter your password (Atleast 5 characters)" pattern=".{5,}"
+                                        required>
+
+                                </div>
+
+                                <div class="md-form mb-4">
+                                    <!-- <i class="fas fa-lock prefix grey-text"></i> -->
+                                    <label>First Name</label>
+                                    <input type="text" class="form-control validate"
+                                        ng-model="user.firstname" placeholder="Enter your first name" required>
+
+                                </div>
+
+                                <div class="md-form mb-4">
+                                    <!-- <i class="fas fa-lock prefix grey-text"></i> -->
+                                    <label>Last Name</label>
+                                    <input type="text" class="form-control validate"
+                                        ng-model="user.lastname" placeholder="Enter your last name" required>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <p style="float:left; font-size: 15px" ng-style='color'>{{regMessage}}</p>
+                                <button type="submit" class="btn btn-primary">Sign up</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <script src="/js/registration_controller.js"></script>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div ng-controller="favCtrl">
+                    <div class="modal fade" id="myFavModal" role="dialog" ng-show="gameData[0].name">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background: #f2f2f2;">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <img ng-if="gameData[0].screenshots[0].image_id!==undefined"
+                                                class="game-card-image"
+                                                ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{gameData[0].screenshots[0].image_id}}.jpg">
+                                            <img ng-if="gameData[0].screenshots[0].image_id==undefined"
+                                                class="game-card-image" ng-src="/images/noimage.jpg">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h2>{{gameData[0].name}}</h2>
+                                            <h3 style="font-size: 16px;" ng-if="gameData[0].total_rating!==undefined">
+                                                Rating: {{gameData[0].total_rating | number:0}}</h3>
+                                            <p ng-if="gameData[0].summary!==undefined">{{gameData[0].summary}}</p>
+                                            <p ng-if="gameData[0].summary==undefined">No summary</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+
+                                    <button ng-if="favorites.includes(gameData[0].id) !== true" type="button"
+                                        class="btn btn-success" data-dismiss="modal"
+                                        ng-click="markfavorite(gameData[0])">Mark Favorite</button>
+                                    <button ng-if="favorites.includes(gameData[0].id) == true" type="button"
+                                        class="btn btn-danger" data-dismiss="modal"
+                                        ng-click="unmarkfavorite(gameData[0])">Unmark Favorite</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="left-content" class="col-lg-4" ng-if="page!=='Visualization'">
+                        <h3>Favorite Games</h3>
+                        <br>
+                        <div ng-if="$root.isLoggedIn() == false">
+                            <h4>Please log in to view favorite games</h4>
+                        </div>
+                        <div ng-if="$root.isLoggedIn() == true" class="widget-list">
+                            <div ng-if="favorites.length == 0"><h4>No favorites games</h4></div>
+                            <div ng-if="favorites.length > 0"
+                                style="border: 1px solid #f1f1f1; background: rgb(196, 241, 166);cursor: pointer;"
+                                class="widget-card top-buffer" ng-repeat="favgame in favGameData">
+                                <div data-toggle="modal" data-target="#myFavModal" ng-click="getGameData(favgame.id)">
+                                    <div class="widget-content"
+                                        style="min-width: 250px;font-size: 100%;vertical-align: baseline;">
+                                        <h4>{{favgame.name}}</h4>
+                                        <p>{{identifyGenre(favgame.genres[0])}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script src="/js/favorites_controller.js"></script>
+                </div>
+                <div ng-controller="vgdbCtrl">
+                    <div class="modal fade" id="myModal" role="dialog" ng-show="gameData[0].name">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background: #f2f2f2;">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <img ng-if="gameData[0].screenshots[0].image_id!==undefined"
+                                                class="game-card-image"
+                                                ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{gameData[0].screenshots[0].image_id}}.jpg">
+                                            <img ng-if="gameData[0].screenshots[0].image_id==undefined"
+                                                class="game-card-image" ng-src="/images/noimage.jpg">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h2>{{gameData[0].name}}</h2>
+                                            <h3 style="font-size: 16px;" ng-if="gameData[0].total_rating!==undefined">
+                                                Rating: {{gameData[0].total_rating | number:0}}</h3>
+                                            <p ng-if="gameData[0].summary!==undefined">{{gameData[0].summary}}</p>
+                                            <p ng-if="gameData[0].summary==undefined">No summary</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                        <div ng-if="$root.isLoggedIn() == false" style='font-weight:bold;'>Please log in to
+                                                mark/unmark game as favorite</div>
+                                            <div ng-if="$root.isLoggedIn() == true">
+                                    <button ng-if="favorites.includes(gameData[0].id) !== true" type="button"
+                                        class="btn btn-success" data-dismiss="modal"
+                                        ng-click="markfavorite(gameData[0])">Mark Favorite</button>
+                                    <button ng-if="favorites.includes(gameData[0].id) == true" type="button"
+                                        class="btn btn-danger" data-dismiss="modal"
+                                        ng-click="unmarkfavorite(gameData[0])">Unmark Favorite</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div ng-if="page=='Home'">
+                        <div id="right-content" class="col-lg-8">
+                            <h2>All Games</h2>
+                            <div class="row">
+                                <div class="col-lg-2 game-container top-buffer" data-slick-index="0" aria-hidden="false"
+                                    tabindex="-1" role="option" ng-repeat="game in allGames">
+                                    <a class="game-card" data-playlist_id="20910" href="" tabindex="0">
+                                        <img ng-if="game.screenshots[0].image_id==undefined" class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/nocover_qhhlj6.jpg">
+                                        <img ng-if="game.screenshots[0].image_id!==undefined" class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{game.screenshots[0].image_id}}.jpg">
+                                        <div class="game-card-overlay" data-toggle="modal" data-target="#myModal"
+                                            ng-click="getGameData(game.id)">Read
+                                            <br>More</div>
+                                        <div class="game-card-caption">
+                                            <div class="game-card-aside">{{game.total_rating | number:0}}</div>
+                                            <p class="game-card-name">{{game.name}}</p>
+                                            <small class="game-card-subtitle">{{identifyGenre(game.genres[0])}}</small>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <script src="/js/vgdb_controller.js"></script>
+                        </div>
+                    </div>
+                </div>
+                <div ng-controller="simulatorCtrl">
+                    <div class="modal fade" id="mySimModal" role="dialog" ng-show="gameData[0].name">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background: #f2f2f2;">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <img ng-if="gameData[0].screenshots[0].image_id!==undefined"
+                                                class="game-card-image"
+                                                ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{gameData[0].screenshots[0].image_id}}.jpg">
+                                            <img ng-if="gameData[0].screenshots[0].image_id==undefined"
+                                                class="game-card-image" ng-src="/images/noimage.jpg">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h2>{{gameData[0].name}}</h2>
+                                            <h3 style="font-size: 16px;" ng-if="gameData[0].total_rating!==undefined">
+                                                Rating: {{gameData[0].total_rating | number:0}}</h3>
+                                            <p ng-if="gameData[0].summary!==undefined">{{gameData[0].summary}}</p>
+                                            <p ng-if="gameData[0].summary==undefined">No summary</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div ng-if="$root.isLoggedIn() == false" style='font-weight:bold;'>Please log in to
+                                        mark/unmark game as favorite</div>
+                                    <div ng-if="$root.isLoggedIn() == true">
+                                        <button ng-if="favorites.includes(gameData[0].id) !== true" type="button"
+                                            class="btn btn-success" data-dismiss="modal"
+                                            ng-click="markfavorite(gameData[0])">Mark Favorite</button>
+                                        <button ng-if="favorites.includes(gameData[0].id) == true" type="button"
+                                            class="btn btn-danger" data-dismiss="modal"
+                                            ng-click="unmarkfavorite(gameData[0])">Unmark Favorite</button>
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div ng-if="page=='Simulator'">
+                        <div id="right-content" class="col-lg-8">
+                            <h2>Simulator Games</h2>
+                            <div id="games-row" class="row">
+                                <div class="col-lg-2 game-container top-buffer" data-slick-index="0" aria-hidden="false"
+                                    tabindex="-1" role="option" ng-repeat="simgame in simulatorGames">
+                                    <a class="game-card" data-playlist_id="20910" href="" tabindex="0">
+                                        <img ng-if="simgame.screenshots[0].image_id!==undefined" class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{simgame.screenshots[0].image_id}}.jpg">
+                                        <img ng-if="simgame.screenshots[0].image_id==undefined" class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/nocover_qhhlj6.jpg">
+                                        <div class="game-card-overlay" data-toggle="modal" data-target="#mySimModal"
+                                            ng-click="getGameData(simgame.id)">Read
+                                            <br>More</div>
+                                        <div class="game-card-caption">
+                                            <div class="game-card-aside">{{simgame.total_rating | number:0}}</div>
+                                            <p class="game-card-name">{{simgame.name}}</p>
+                                            <small
+                                                class="game-card-subtitle">{{identifyGenre(simgame.genres[0])}}</small>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <script src="/js/simulator_controller.js"></script>
+                        </div>
+                    </div>
+                </div>
+                <div ng-controller="fightingCtrl">
+                    <div class="modal fade" id="myFightModal" role="dialog" ng-show="gameData[0].name">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background: #f2f2f2;">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <img ng-if="gameData[0].screenshots[0].image_id!==undefined"
+                                                class="game-card-image"
+                                                ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{gameData[0].screenshots[0].image_id}}.jpg">
+                                            <img ng-if="gameData[0].screenshots[0].image_id==undefined"
+                                                class="game-card-image" ng-src="/images/noimage.jpg">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h2>{{gameData[0].name}}</h2>
+                                            <h3 style="font-size: 16px;" ng-if="gameData[0].total_rating!==undefined">
+                                                Rating: {{gameData[0].total_rating | number:0}}</h3>
+                                            <p ng-if="gameData[0].summary!==undefined">{{gameData[0].summary}}</p>
+                                            <p ng-if="gameData[0].summary==undefined">No summary</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div ng-if="$root.isLoggedIn() == false" style='font-weight:bold;'>Please log in to
+                                        mark/unmark game as favorite</div>
+                                    <div ng-if="$root.isLoggedIn() == true">
+                                        <button ng-if="favorites.includes(gameData[0].id) !== true" type="button"
+                                            class="btn btn-success" data-dismiss="modal"
+                                            ng-click="markfavorite(gameData[0])">Mark Favorite</button>
+                                        <button ng-if="favorites.includes(gameData[0].id) == true" type="button"
+                                            class="btn btn-danger" data-dismiss="modal"
+                                            ng-click="unmarkfavorite(gameData[0])">Unmark Favorite</button>
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div ng-if="page=='Fighting'">
+                        <div id="right-content" class="col-lg-8">
+                            <h2>Fighting Games</h2>
+                            <div id="games-row" class="row">
+                                <div class="col-lg-2 game-container top-buffer" data-slick-index="0" aria-hidden="false"
+                                    tabindex="-1" role="option" ng-repeat="fightgame in fightingGames">
+                                    <a class="game-card" data-playlist_id="20910" href="" tabindex="0">
+                                        <img ng-if="fightgame.screenshots[0].image_id!==undefined"
+                                            class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{fightgame.screenshots[0].image_id}}.jpg">
+                                        <img ng-if="fightgame.screenshots[0].image_id==undefined"
+                                            class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/nocover_qhhlj6.jpg">
+                                        <div class="game-card-overlay" data-toggle="modal" data-target="#myFightModal"
+                                            ng-click="getGameData(fightgame.id)">Read
+                                            <br>More</div>
+                                        <div class="game-card-caption">
+                                            <div class="game-card-aside">{{fightgame.total_rating | number:0}}</div>
+                                            <p class="game-card-name">{{fightgame.name}}</p>
+                                            <small
+                                                class="game-card-subtitle">{{identifyGenre(fightgame.genres[0])}}</small>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <script src="/js/fighting_controller.js"></script>
+                        </div>
+                    </div>
+                </div>
+                <div ng-controller="strategyCtrl">
+                    <div class="modal fade" id="myStratModal" role="dialog" ng-show="gameData[0].name">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background: #f2f2f2;">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <img ng-if="gameData[0].screenshots[0].image_id!==undefined"
+                                                class="game-card-image"
+                                                ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{gameData[0].screenshots[0].image_id}}.jpg">
+                                            <img ng-if="gameData[0].screenshots[0].image_id==undefined"
+                                                class="game-card-image" ng-src="/images/noimage.jpg">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h2>{{gameData[0].name}}</h2>
+                                            <h3 style="font-size: 16px;" ng-if="gameData[0].total_rating!==undefined">
+                                                Rating: {{gameData[0].total_rating | number:0}}</h3>
+                                            <p ng-if="gameData[0].summary!==undefined">{{gameData[0].summary}}</p>
+                                            <p ng-if="gameData[0].summary==undefined">No summary</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div ng-if="$root.isLoggedIn() == false" style='font-weight:bold;'>Please log in to
+                                        mark/unmark game as favorite</div>
+                                    <div ng-if="$root.isLoggedIn() == true">
+                                        <button ng-if="favorites.includes(gameData[0].id) !== true" type="button"
+                                            class="btn btn-success" data-dismiss="modal"
+                                            ng-click="markfavorite(gameData[0])">Mark Favorite</button>
+                                        <button ng-if="favorites.includes(gameData[0].id) == true" type="button"
+                                            class="btn btn-danger" data-dismiss="modal"
+                                            ng-click="unmarkfavorite(gameData[0])">Unmark Favorite</button>
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div ng-if="page=='Strategy'">
+                        <div id="right-content" class="col-lg-8">
+                            <h2>Strategy Games</h2>
+                            <div id="games-row" class="row">
+                                <div class="col-lg-2 game-container top-buffer" data-slick-index="0" aria-hidden="false"
+                                    tabindex="-1" role="option" ng-repeat="stratgame in strategyGames">
+                                    <a class="game-card" data-playlist_id="20910" href="" tabindex="0">
+                                        <img ng-if="stratgame.screenshots[0].image_id!==undefined"
+                                            class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{stratgame.screenshots[0].image_id}}.jpg">
+                                        <img ng-if="stratgame.screenshots[0].image_id==undefined"
+                                            class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/nocover_qhhlj6.jpg">
+                                        <div class="game-card-overlay" data-toggle="modal" data-target="#myStratModal"
+                                            ng-click="getGameData(stratgame.id)">Read
+                                            <br>More</div>
+                                        <div class="game-card-caption">
+                                            <div class="game-card-aside">{{stratgame.total_rating | number:0}}</div>
+                                            <p class="game-card-name">{{stratgame.name}}</p>
+                                            <small
+                                                class="game-card-subtitle">{{identifyGenre(stratgame.genres[0])}}</small>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <script src="/js/strategy_controller.js"></script>
+                        </div>
+                    </div>
+                </div>
+                <div ng-controller="adventureCtrl">
+                    <div class="modal fade" id="myAdModal" role="dialog" ng-show="gameData[0].name">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background: #f2f2f2;">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <img ng-if="gameData[0].screenshots[0].image_id!==undefined"
+                                                class="game-card-image"
+                                                ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{gameData[0].screenshots[0].image_id}}.jpg">
+                                            <img ng-if="gameData[0].screenshots[0].image_id==undefined"
+                                                class="game-card-image" ng-src="/images/noimage.jpg">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h2>{{gameData[0].name}}</h2>
+                                            <h3 style="font-size: 16px;" ng-if="gameData[0].total_rating!==undefined">
+                                                Rating: {{gameData[0].total_rating | number:0}}</h3>
+                                            <p ng-if="gameData[0].summary!==undefined">{{gameData[0].summary}}</p>
+                                            <p ng-if="gameData[0].summary==undefined">No summary</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div ng-if="$root.isLoggedIn() == false" style='font-weight:bold;'>Please log in to
+                                        mark/unmark game as favorite</div>
+                                    <div ng-if="$root.isLoggedIn() == true">
+                                        <button ng-if="favorites.includes(gameData[0].id) !== true" type="button"
+                                            class="btn btn-success" data-dismiss="modal"
+                                            ng-click="markfavorite(gameData[0])">Mark Favorite</button>
+                                        <button ng-if="favorites.includes(gameData[0].id) == true" type="button"
+                                            class="btn btn-danger" data-dismiss="modal"
+                                            ng-click="unmarkfavorite(gameData[0])">Unmark Favorite</button>
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div ng-if="page=='Adventure'">
+                        <div id="right-content" class="col-lg-8">
+                            <h2>Adventure Games</h2>
+                            <div id="games-row" class="row">
+                                <div class="col-lg-2 game-container top-buffer" data-slick-index="0" aria-hidden="false"
+                                    tabindex="-1" role="option" ng-repeat="adgame in adventureGames">
+                                    <a class="game-card" data-playlist_id="20910" href="" tabindex="0">
+                                        <img ng-if="adgame.screenshots[0].image_id!==undefined" class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{adgame.screenshots[0].image_id}}.jpg">
+                                        <img ng-if="adgame.screenshots[0].image_id==undefined" class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/nocover_qhhlj6.jpg">
+                                        <div class="game-card-overlay" data-toggle="modal" data-target="#myAdModal"
+                                            ng-click="getGameData(adgame.id)">Read
+                                            <br>More</div>
+                                        <div class="game-card-caption">
+                                            <div class="game-card-aside">{{adgame.total_rating | number:0}}</div>
+                                            <p class="game-card-name">{{adgame.name}}</p>
+                                            <small
+                                                class="game-card-subtitle">{{identifyGenre(adgame.genres[0])}}</small>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <script src="/js/adventure_controller.js"></script>
+                        </div>
+                    </div>
+                </div>
+                <div ng-controller="shooterCtrl">
+                    <div class="modal fade" id="myShootModal" role="dialog" ng-show="gameData[0].name">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background: #f2f2f2;">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <img ng-if="gameData[0].screenshots[0].image_id!==undefined"
+                                                class="game-card-image"
+                                                ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{gameData[0].screenshots[0].image_id}}.jpg">
+                                            <img ng-if="gameData[0].screenshots[0].image_id==undefined"
+                                                class="game-card-image" ng-src="/images/noimage.jpg">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h2>{{gameData[0].name}}</h2>
+                                            <h3 style="font-size: 16px;" ng-if="gameData[0].total_rating!==undefined">
+                                                Rating: {{gameData[0].total_rating | number:0}}</h3>
+                                            <p ng-if="gameData[0].summary!==undefined">{{gameData[0].summary}}</p>
+                                            <p ng-if="gameData[0].summary==undefined">No summary</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div ng-if="$root.isLoggedIn() == false" style='font-weight:bold;'>Please log in to
+                                        mark/unmark game as favorite</div>
+                                    <div ng-if="$root.isLoggedIn() == true">
+                                        <button ng-if="favorites.includes(gameData[0].id) !== true" type="button"
+                                            class="btn btn-success" data-dismiss="modal"
+                                            ng-click="markfavorite(gameData[0])">Mark Favorite</button>
+                                        <button ng-if="favorites.includes(gameData[0].id) == true" type="button"
+                                            class="btn btn-danger" data-dismiss="modal"
+                                            ng-click="unmarkfavorite(gameData[0])">Unmark Favorite</button>
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div ng-if="page=='Shooter'">
+                        <div id="right-content" class="col-lg-8">
+                            <h2>Shooter Games</h2>
+                            <div id="games-row" class="row">
+                                <div class="col-lg-2 game-container top-buffer" data-slick-index="0" aria-hidden="false"
+                                    tabindex="-1" role="option" ng-repeat="shootgame in shooterGames">
+                                    <a class="game-card" data-playlist_id="20910" href="" tabindex="0">
+                                        <img ng-if="shootgame.screenshots[0].image_id!==undefined"
+                                            class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/{{shootgame.screenshots[0].image_id}}.jpg">
+                                        <img ng-if="shootgame.screenshots[0].image_id==undefined"
+                                            class="game-card-image"
+                                            ng-src="https://images.igdb.com/igdb/image/upload/t_cover_uniform/nocover_qhhlj6.jpg">
+                                        <div class="game-card-overlay" data-toggle="modal" data-target="#myShootModal"
+                                            ng-click="getGameData(shootgame.id)">Read
+                                            <br>More</div>
+                                        <div class="game-card-caption">
+                                            <div class="game-card-aside">{{shootgame.total_rating | number:0}}</div>
+                                            <p class="game-card-name">{{shootgame.name}}</p>
+                                            <small
+                                                class="game-card-subtitle">{{identifyGenre(shootgame.genres[0])}}</small>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <script src="/js/shooter_controller.js"></script>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <div ng-if="page=='Visualization'">
+        <div ng-controller="visualCtrl">
+            <div ng-if="$root.isLoggedIn() == false">
+                <h3 style="text-align: center;">Please log in to view vgdb visualization</h3>
+            </div>
+            <div ng-if="$root.isLoggedIn() == true">
+                <h3 ng-if="visualdata.length > 0" style="text-align:center">Genre Popularity</h3>
+                <nvd3 options="options" data="data"></nvd3>
+                <p ng-if="visualdata.length > 0" style="text-align: center;">Genre</p>
+                <br>
+                <br>
+                <h3 ng-if="visualdata2.length > 0" style="text-align:center">Game Popularity</h3>
+                <nvd3 options="options2" data="data2"></nvd3>
+                <p ng-if="visualdata2.length > 0" style="text-align: center;">Game Name</p>
+            </div>
+            <script src="/js/visualisation_controller.js"></script>
+        </div>
+    </div>
+</body>
+
+</html>
