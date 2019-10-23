@@ -1,6 +1,6 @@
 # VGDB Assignment 2 | Google Cloud Platform
 
-### Technologies Used: 
+## Technologies Used: 
  
 ### Google App engine 
  
