@@ -1,1 +1,1 @@
-# Video Game Database | Google Cloud Platform
+# VGDB Assignment 2 | Google Cloud Platform
