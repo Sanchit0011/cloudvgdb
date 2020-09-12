@@ -20,7 +20,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "igdb-api-node": "^4.0.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "pg": "^7.12.1"
   },
   "devDependencies": {}
